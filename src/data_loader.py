@@ -7,7 +7,18 @@ DATA_PATH = "data"
 
 def load_csv(filename):
     path = os.path.join(DATA_PATH, filename)
-    return pd.read_csv(path)
+    try:
+        df = pd.read_csv(path)
+        if df.empty:
+            print(f" Warning: {filename} is empty.")
+        return df
+    except pd.errors.EmptyDataError:
+        print(f" Error: {filename} has no data or columns.")
+        return pd.DataFrame()
+    except FileNotFoundError:
+        print(f" Error: {filename} not found.")
+        return pd.DataFrame()
+
 
 def load_all_data():
     races = load_csv("races.csv")
