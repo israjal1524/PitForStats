@@ -1,10 +1,10 @@
 import streamlit as st
 from src.data_loader import load_all_data
 
-st.title("🏎️ PitForStats – Data Load Test")
+st.title("PitForStats – Data Load Test")
 
 data = load_all_data()
-st.write("🧠 Previewing datasets:")
+st.write(" Previewing datasets:")
 
 for name, df in data.items():
     st.subheader(name.upper())
