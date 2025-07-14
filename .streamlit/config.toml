@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#e10600"               # Ferrari Red
+backgroundColor = "#0d0d0d"            # Deep Black
+secondaryBackgroundColor = "#1a1a1a"   # Dark Grey
+textColor = "#ffffff"
+font = "sans serif"
