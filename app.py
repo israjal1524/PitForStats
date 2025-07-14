@@ -1,7 +1,8 @@
 import streamlit as st
+import pandas as pd
 from src.data_loader import load_all_data
 
-# Custom Styling
+# 🎨 Styling and visuals
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
@@ -27,31 +28,30 @@ st.markdown("""
         color: #e10600;
     }
     </style>
+
 """, unsafe_allow_html=True)
 
-# Load Data
-data = load_all_data()
-available_years = sorted(data["races"]["year"].unique(), reverse=True)
-
-# Header
-st.image("https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg", width=100)
-st.markdown("<h1 style='text-align: center;'>PitForStats</h1>", unsafe_allow_html=True)
+#  Title
+st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
-# Sidebar
+# Load data
+data = load_all_data()
+
+#  Extract 'year' from 'date' column in races
+data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
+available_years = sorted(data['races']['year'].unique(), reverse=True)
+
+# 📊 Sidebar filters
 with st.sidebar:
     st.header("Filter Controls")
+    selected_year = st.selectbox("Select Year", available_years, index=0)
 
-    selected_year = st.selectbox(
-        "Select Year",
-        available_years,
-        index=0,
-        help="Choose a season to view race data"
-    )
+#  Filtered races
+races_this_year = data['races'][data['races']['year'] == selected_year]
 
-
-# 📈 Stats
+#  Metrics
 col1, col2 = st.columns(2)
 with col1:
     st.metric("Total Races", len(data['races']))
@@ -62,13 +62,10 @@ with col2:
 
 st.markdown("---")
 
-# 🧾 Data Previews
-# Filter races by selected year
-races_this_year = data["races"][data["races"]["year"] == selected_year]
-
+#  Filtered race calendar
 st.markdown(f"### Race Calendar - {selected_year} Season")
 st.dataframe(races_this_year.reset_index(drop=True))
 
-
+#  Drivers Overview
 st.markdown("### Drivers Overview")
 st.dataframe(data['drivers'].head())
