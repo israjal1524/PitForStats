@@ -1,7 +1,7 @@
 import streamlit as st
 from src.data_loader import load_all_data
 
-# 🎨 Custom Styling
+# Custom Styling
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
@@ -29,22 +29,27 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 🏎️ Load Data
+# Load Data
 data = load_all_data()
+available_years = sorted(data["races"]["year"].unique(), reverse=True)
 
-# 🏁 Header
+# Header
 st.image("https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg", width=100)
 st.markdown("<h1 style='text-align: center;'>PitForStats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
-# 📊 Sidebar
+# Sidebar
 with st.sidebar:
     st.header("Filter Controls")
-    st.markdown("Coming soon:")
-    st.caption("• Year selector")
-    st.caption("• Driver filter")
-    st.caption("• Race track selection")
+
+    selected_year = st.selectbox(
+        "Select Year",
+        available_years,
+        index=0,
+        help="Choose a season to view race data"
+    )
+
 
 # 📈 Stats
 col1, col2 = st.columns(2)
@@ -58,8 +63,12 @@ with col2:
 st.markdown("---")
 
 # 🧾 Data Previews
-st.markdown("### Race Calendar")
-st.dataframe(data['races'].head())
+# Filter races by selected year
+races_this_year = data["races"][data["races"]["year"] == selected_year]
+
+st.markdown(f"### Race Calendar - {selected_year} Season")
+st.dataframe(races_this_year.reset_index(drop=True))
+
 
 st.markdown("### Drivers Overview")
 st.dataframe(data['drivers'].head())
