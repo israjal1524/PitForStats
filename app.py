@@ -1,7 +1,7 @@
 import streamlit as st
 from src.data_loader import load_all_data
 
-# 🎨 Basic Styling
+# 🎨 Custom Styling
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
@@ -34,13 +34,14 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# 🏁 Header
-st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
-st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
-st.markdown("---")
-
 # 🏎️ Load Data
 data = load_all_data()
+
+# 🏁 Header
+st.image("https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg", width=100)
+st.markdown("<h1 style='text-align: center;'>PitForStats</h1>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
+st.markdown("---")
 
 # 📊 Sidebar
 with st.sidebar:
