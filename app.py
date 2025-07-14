@@ -1,19 +1,20 @@
 import streamlit as st
 from src.data_loader import load_all_data
 
-# Custom UI styling
+#  Custom Styling
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
     html, body, [class*="css"] {
         font-family: 'Orbitron', sans-serif !important;
+        background: none;
     }
 
     .stApp {
-      background: url("https://i.ibb.co/WgK3W8P/racetrack-bg.jpg") no-repeat center center fixed;
-      background-size: cover;
-      color: white;
+        background: url('https://i.postimg.cc/CLVt0CWN/pitforstats-back.gif') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
     }
 
     .block-container {
@@ -27,15 +28,16 @@ st.markdown("""
     }
     </style>
 
+    <!-- 🏁 Floating Checkered Flag -->
     <div style='position: fixed; bottom: 20px; right: 20px; z-index: 1000;'>
         <img src='https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif' width='80'>
     </div>
 """, unsafe_allow_html=True)
 
-# Load all F1 data
+# 🏎️ Load Data
 data = load_all_data()
 
-# Header
+#Header
 st.image("https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg", width=100)
 st.markdown("<h1 style='text-align: center;'>PitForStats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
@@ -49,7 +51,7 @@ with st.sidebar:
     st.caption("• Driver filter")
     st.caption("• Race track selection")
 
-# Metrics
+# Stats
 col1, col2 = st.columns(2)
 with col1:
     st.metric("Total Races", len(data['races']))
@@ -60,7 +62,7 @@ with col2:
 
 st.markdown("---")
 
-# Data previews
+# Data Previews
 st.markdown("### Race Calendar")
 st.dataframe(data['races'].head())
 
