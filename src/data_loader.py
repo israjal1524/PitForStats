@@ -1,37 +1,24 @@
-# src/data_loader.py
 
-import pandas as pd
 import os
+import pandas as pd
+from kagglehub import dataset_download
 
-DATA_PATH = "data"
-
-def load_csv(filename):
-    path = os.path.join(DATA_PATH, filename)
-    try:
-        df = pd.read_csv(path)
-        if df.empty:
-            print(f" Warning: {filename} is empty.")
-        return df
-    except pd.errors.EmptyDataError:
-        print(f" Error: {filename} has no data or columns.")
-        return pd.DataFrame()
-    except FileNotFoundError:
-        print(f" Error: {filename} not found.")
-        return pd.DataFrame()
-
+# Optional: Use secrets when running on Streamlit Cloud
+if "KAGGLE_USERNAME" in os.environ and "KAGGLE_KEY" in os.environ:
+    os.environ["KAGGLE_USERNAME"] = os.environ["KAGGLE_USERNAME"]
+    os.environ["KAGGLE_KEY"] = os.environ["KAGGLE_KEY"]
 
 def load_all_data():
-    races = load_csv("races.csv")
-    results = load_csv("results.csv")
-    drivers = load_csv("drivers.csv")
-    constructors = load_csv("constructors.csv")
-    pit_stops = load_csv("pit_stops.csv")
+    # Downloads and caches the Kaggle dataset locally
+    base_path = dataset_download("rohanrao/formula-1-world-championship-1950-2020")
+
+    def load(file_name):
+        file_path = os.path.join(base_path, file_name)
+        return pd.read_csv(file_path)
 
     return {
-        "races": races,
-        "results": results,
-        "drivers": drivers,
-        "constructors": constructors,
-        "pit_stops": pit_stops
+        "races": load("races.csv"),
+        "drivers": load("drivers.csv"),
+        "constructors": load("constructors.csv"),
+        "results": load("results.csv")
     }
-
