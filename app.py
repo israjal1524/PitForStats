@@ -11,9 +11,9 @@ st.markdown("""
     }
 
     .stApp {
-        background: url("https://i.ibb.co/q7MQR2D/asphalt-bg.jpg") no-repeat center center fixed;
-        background-size: cover;
-        color: white;
+      background: url("https://i.ibb.co/WgK3W8P/racetrack-bg.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
     }
 
     .block-container {
