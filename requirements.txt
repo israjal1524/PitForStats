@@ -1,3 +1,4 @@
 streamlit
 pandas
+kagglehub>=0.1.7
 
