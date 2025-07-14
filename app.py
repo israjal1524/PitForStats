@@ -33,7 +33,6 @@ st.markdown("""
 data = load_all_data()
 
 #Header
-st.image("https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg", width=100)
 st.markdown("<h1 style='text-align: center;'>PitForStats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
