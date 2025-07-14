@@ -1,14 +1,37 @@
 import streamlit as st
-from src.data_loader import load_all_data  # Import the data loading function
+from src.data_loader import load_all_data
 
-# Main dashboard title
-st.title("PitForStats – Data Load Test")
-
-# Call the function to load all datasets
+# Load data
 data = load_all_data()
 
-# Display each dataset with a header and table
-st.write("Previewing datasets:")
-for name, df in data.items():
-    st.subheader(name.upper())
-    st.dataframe(df.head(5))  # Shows first 5 rows of each dataset
+# Header
+st.image("https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg", width=100)
+st.title("PitForStats")
+st.subheader("Formula 1 Analytics Dashboard")
+st.markdown("---")
+
+# Sidebar (optional placeholder for filters)
+with st.sidebar:
+    st.header("Filters")
+    st.markdown("Year filter (coming soon)")
+    st.markdown("Driver filter (coming soon)")
+
+# Metrics layout
+col1, col2 = st.columns(2)
+
+with col1:
+    st.metric("Total Races", len(data['races']))
+    st.metric("Total Drivers", len(data['drivers']))
+
+with col2:
+    st.metric("Total Constructors", len(data['constructors']))
+    st.metric("Total Results", len(data['results']))
+
+st.markdown("---")
+
+# Data previews
+st.markdown("### Race Calendar")
+st.dataframe(data['races'].head())
+
+st.markdown("### Drivers Overview")
+st.dataframe(data['drivers'].head())
