@@ -13,7 +13,8 @@ def load_lottie_url(url):
         return None
     return r.json()
 
-engine_lottie = load_lottie_url("https://lottie.host/2dd92f0c-c9b4-4554-9333-70b521165d2b/YRu6vXoq4q.json")  # Engine rev animation
+engine_lottie = load_lottie_url("https://assets9.lottiefiles.com/packages/lf20_jtbfg2nb.json")
+ # Engine rev animation
 
 # === Global styling
 st.markdown("""
