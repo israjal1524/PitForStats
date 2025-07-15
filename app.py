@@ -1,20 +1,8 @@
 import streamlit as st
 import pandas as pd
 from src.data_loader import load_all_data
-from streamlit_lottie import st_lottie
-import requests
 
 st.set_page_config(page_title="Pit For Stats", layout="wide")
-
-# === Function to load Lottie animation
-def load_lottie_url(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-engine_lottie = load_lottie_url("https://assets9.lottiefiles.com/packages/lf20_jtbfg2nb.json")
- # Engine rev animation
 
 # === Global styling
 st.markdown("""
@@ -58,19 +46,6 @@ st.markdown("""
 
 st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
-st.markdown("---")
-
-# === Cockpit Mode Start
-st.subheader("🚀 Start Cockpit Mode")
-st_lottie(engine_lottie, speed=1.2, height=200, key="engine")
-
-st.markdown("""
-<audio controls>
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-sports-car-engine-rev-1580.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-""", unsafe_allow_html=True)
-
 st.markdown("---")
 
 # === Load Data
