@@ -58,6 +58,35 @@ selected_year = st.sidebar.selectbox("Select Year", available_years, index=0)
 
 # === Filtered Data
 races_this_year = data['races'][data['races']['year'] == selected_year]
+# === Get list of drivers for dropdown
+data['drivers']['driverName'] = data['drivers']['forename'] + ' ' + data['drivers']['surname']
+driver_list = data['drivers'].sort_values('surname')['driverName'].tolist()
+
+# === Sidebar: Driver selector
+selected_driver = st.sidebar.selectbox("Select Driver", ["All Drivers"] + driver_list)
+
+# === Get driverId from name
+if selected_driver != "All Drivers":
+    selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
+    selected_driver_id = selected_driver_row['driverId']
+
+    # === Show career stats
+    st.markdown(f"##  Career Overview: {selected_driver}")
+    career_results = data['results'][data['results']['driverId'] == selected_driver_id]
+
+    total_races = career_results['raceId'].nunique()
+    total_points = career_results['points'].sum()
+    wins = (career_results['positionOrder'] == 1).sum()
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Races", total_races)
+    col2.metric("Wins", wins)
+    col3.metric("Total Points", int(total_points))
+
+    st.markdown("### Races Participated In")
+    joined = career_results.merge(data['races'], on='raceId')[['year', 'raceName', 'grid', 'positionOrder', 'points']]
+    st.dataframe(joined.sort_values(['year', 'raceName']))
+
 
 # === Metrics
 col1, col2 = st.columns(2)
