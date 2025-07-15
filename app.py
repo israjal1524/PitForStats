@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 from src.data_loader import load_all_data
 
-# === Haptic toggle (visible only on mobile browsers with vibration)
-haptic_mode = st.sidebar.toggle("🔊 Enable Haptic Engine Mode", value=True)
+# === Cockpit Experience Toggle
+cockpit_mode = st.sidebar.toggle(" Cockpit Experience Mode", value=True)
 
-# === Inject global styles
+# === Global styling
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
@@ -50,43 +50,61 @@ st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_h
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
-# === Inject HAPTICS JS if enabled
-if haptic_mode:
+# === Cockpit FX Scripts
+if cockpit_mode:
     st.markdown("""
+    <!-- Rev sound on load -->
+    <audio id="engineRevOnLoad" autoplay hidden>
+      <source src="https://assets.mixkit.co/sfx/preview/mixkit-sports-car-engine-rev-1580.mp3" type="audio/mpeg">
+    </audio>
     <script>
-    // Haptic: Engine revs on load
-    window.addEventListener('load', function () {
-      if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100, 70, 200]);
-      }
-    });
+      window.addEventListener('load', () => {
+        const audio = document.getElementById('engineRevOnLoad');
+        if (audio) {
+          audio.volume = 0.8;
+          audio.play().catch(() => {});
+        }
+      });
+    </script>
 
-    // Haptic: Finish-line buzz at bottom scroll
-    window.addEventListener('scroll', function () {
-      if (navigator.vibrate) {
+    <!-- Scroll-end red flash + rev -->
+    <style>
+      @keyframes flash {
+        0%, 100% { background-color: transparent; }
+        50% { background-color: rgba(255, 0, 0, 0.5); }
+      }
+      .scroll-flash {
+        animation: flash 0.5s ease-in-out;
+      }
+    </style>
+    <script>
+      window.addEventListener('scroll', function () {
         const atBottom = Math.ceil(window.innerHeight + window.scrollY) >= document.body.scrollHeight;
         if (atBottom) {
-          navigator.vibrate([200, 50, 100]);
+          const body = document.body;
+          body.classList.add('scroll-flash');
+          setTimeout(() => body.classList.remove('scroll-flash'), 500);
+          
+          const revAudio = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-sports-car-engine-rev-1580.mp3");
+          revAudio.volume = 0.9;
+          revAudio.play().catch(() => {});
         }
-      }
-    });
+      });
     </script>
     """, unsafe_allow_html=True)
 
-# === Load data
+# === Load Data
 data = load_all_data()
-
-# Add 'year' column to races
 data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
 available_years = sorted(data['races']['year'].unique(), reverse=True)
 
-# === Sidebar filter
+# === Sidebar: Year Selection
 selected_year = st.sidebar.selectbox("Select Year", available_years, index=0)
 
-# === Filter races by year
+# === Filter races
 races_this_year = data['races'][data['races']['year'] == selected_year]
 
-# === Metrics
+# === Metrics Section
 col1, col2 = st.columns(2)
 with col1:
     st.metric("Total Races", len(data['races']))
@@ -101,6 +119,6 @@ st.markdown("---")
 st.markdown(f"### Race Calendar - {selected_year} Season")
 st.dataframe(races_this_year.reset_index(drop=True))
 
-# === Drivers Overview
+# === Driver Overview
 st.markdown("### Drivers Overview")
 st.dataframe(data['drivers'].head())
