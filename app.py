@@ -1,8 +1,19 @@
 import streamlit as st
 import pandas as pd
 from src.data_loader import load_all_data
+from streamlit_lottie import st_lottie
+import requests
 
 st.set_page_config(page_title="Pit For Stats", layout="wide")
+
+# === Function to load Lottie animation
+def load_lottie_url(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+engine_lottie = load_lottie_url("https://lottie.host/2dd92f0c-c9b4-4554-9333-70b521165d2b/YRu6vXoq4q.json")  # Engine rev animation
 
 # === Global styling
 st.markdown("""
@@ -29,14 +40,6 @@ st.markdown("""
     h1, h2, h3, h4 {
         color: #e10600;
     }
-
-    @keyframes flash {
-      0%, 100% { background-color: transparent; }
-      50% { background-color: rgba(255, 0, 0, 0.5); }
-    }
-    .scroll-flash {
-      animation: flash 0.5s ease-in-out;
-    }
     </style>
 
     <!-- 🏁 Floating Checkered Flag -->
@@ -51,71 +54,50 @@ st.markdown("""
         <img src='https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg' width='100'>
     </div>
 """, unsafe_allow_html=True)
+
 st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
-# === Start Engine Button
-cockpit_engaged = st.button("🚀 Start Cockpit Mode")
+# === Cockpit Mode Start
+st.subheader("🚀 Start Cockpit Mode")
+st_lottie(engine_lottie, speed=1.2, height=200, key="engine")
 
-# === Only load cockpit effects after button is pressed
-if cockpit_engaged:
-    # Rev sound on button press
-    st.markdown("""
-    <audio id="engineRev" autoplay>
-      <source src="https://assets.mixkit.co/sfx/preview/mixkit-sports-car-engine-rev-1580.mp3" type="audio/mpeg">
-    </audio>
+st.markdown("""
+<audio controls>
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-sports-car-engine-rev-1580.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+""", unsafe_allow_html=True)
 
-    <script>
-      const revAudio = document.getElementById('engineRev');
-      if (revAudio) {
-        revAudio.volume = 0.9;
-        revAudio.play().catch(() => {});
-      }
+st.markdown("---")
 
-      // Flash at scroll bottom + play rev again
-      window.addEventListener('scroll', function () {
-        const atBottom = Math.ceil(window.innerHeight + window.scrollY) >= document.body.scrollHeight;
-        if (atBottom) {
-          document.body.classList.add('scroll-flash');
-          setTimeout(() => document.body.classList.remove('scroll-flash'), 500);
+# === Load Data
+data = load_all_data()
+data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
+available_years = sorted(data['races']['year'].unique(), reverse=True)
 
-          const rev2 = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-sports-car-engine-rev-1580.mp3");
-          rev2.volume = 0.9;
-          rev2.play().catch(() => {});
-        }
-      });
-    </script>
-    """, unsafe_allow_html=True)
+# === Sidebar Filter
+selected_year = st.sidebar.selectbox("Select Year", available_years, index=0)
 
-    # === Load Data
-    data = load_all_data()
-    data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
-    available_years = sorted(data['races']['year'].unique(), reverse=True)
+# === Filtered Data
+races_this_year = data['races'][data['races']['year'] == selected_year]
 
-    # === Sidebar: Year Selection
-    selected_year = st.sidebar.selectbox("Select Year", available_years, index=0)
+# === Metrics
+col1, col2 = st.columns(2)
+with col1:
+    st.metric("Total Races", len(data['races']))
+    st.metric("Total Drivers", len(data['drivers']))
+with col2:
+    st.metric("Constructors", len(data['constructors']))
+    st.metric("Results Entries", len(data['results']))
 
-    # === Filter races
-    races_this_year = data['races'][data['races']['year'] == selected_year]
+st.markdown("---")
 
-    # === Metrics Section
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("Total Races", len(data['races']))
-        st.metric("Total Drivers", len(data['drivers']))
-    with col2:
-        st.metric("Constructors", len(data['constructors']))
-        st.metric("Results Entries", len(data['results']))
+# === Race Calendar
+st.markdown(f"### Race Calendar - {selected_year} Season")
+st.dataframe(races_this_year.reset_index(drop=True))
 
-    st.markdown("---")
-
-    # === Race Calendar
-    st.markdown(f"### Race Calendar - {selected_year} Season")
-    st.dataframe(races_this_year.reset_index(drop=True))
-
-    # === Driver Overview
-    st.markdown("### Drivers Overview")
-    st.dataframe(data['drivers'].head())
-else:
-    st.info("Press the 🚀 Start Cockpit Mode button to enter the full PitForStats experience.")
+# === Driver Overview
+st.markdown("### Drivers Overview")
+st.dataframe(data['drivers'].head())
