@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import altair as alt
+import os
 from src.data_loader import load_all_data
 
 st.set_page_config(page_title="Pit For Stats", layout="wide")
@@ -45,43 +47,20 @@ st.markdown("---")
 
 # === Load Data
 data = load_all_data()
-data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
+
+# Ensure 'year' column exists in races
+if 'year' not in data['races'].columns:
+    data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
+
+# === Sidebar Filter: Year
 available_years = sorted(data['races']['year'].unique(), reverse=True)
-
-# === Sidebar Filter
 selected_year = st.sidebar.selectbox("Select Year", available_years, index=0)
-
-# === Filtered Data
 races_this_year = data['races'][data['races']['year'] == selected_year]
-# === Get list of drivers for dropdown
+
+# === Sidebar Filter: Driver
 data['drivers']['driverName'] = data['drivers']['forename'] + ' ' + data['drivers']['surname']
 driver_list = data['drivers'].sort_values('surname')['driverName'].tolist()
-
-# === Sidebar: Driver selector
 selected_driver = st.sidebar.selectbox("Select Driver", ["All Drivers"] + driver_list)
-
-# === Get driverId from name
-if selected_driver != "All Drivers":
-    selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
-    selected_driver_id = selected_driver_row['driverId']
-
-    # === Show career stats
-    st.markdown(f"##  Career Overview: {selected_driver}")
-    career_results = data['results'][data['results']['driverId'] == selected_driver_id]
-
-    total_races = career_results['raceId'].nunique()
-    total_points = career_results['points'].sum()
-    wins = (career_results['positionOrder'] == 1).sum()
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Races", total_races)
-    col2.metric("Wins", wins)
-    col3.metric("Total Points", int(total_points))
-
-    st.markdown("### Races Participated In")
-    joined = career_results.merge(data['races'], on='raceId')[['year', 'raceName', 'grid', 'positionOrder', 'points']]
-    st.dataframe(joined.sort_values(['year', 'raceName']))
-
 
 # === Metrics
 col1, col2 = st.columns(2)
@@ -98,6 +77,35 @@ st.markdown("---")
 st.markdown(f"### Race Calendar - {selected_year} Season")
 st.dataframe(races_this_year.reset_index(drop=True))
 
-# === Driver Overview
-st.markdown("### Drivers Overview")
-st.dataframe(data['drivers'].head())
+# === Driver Analysis
+if selected_driver != "All Drivers":
+    selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
+    selected_driver_id = selected_driver_row['driverId']
+
+    st.markdown(f"##  Career Overview: {selected_driver}")
+    career_results = data['results'][data['results']['driverId'] == selected_driver_id]
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Races", career_results['raceId'].nunique())
+    col2.metric("Wins", (career_results['positionOrder'] == 1).sum())
+    col3.metric("Points", int(career_results['points'].sum()))
+
+    joined = career_results.merge(data['races'], on='raceId', how='inner')
+    columns_to_show = [col for col in ['year', 'raceName', 'grid', 'positionOrder', 'points'] if col in joined.columns]
+
+    st.markdown("###  Races Participated In")
+    st.dataframe(joined[columns_to_show].sort_values(by='year'))
+
+    # === Plot Button
+    if st.button(" Plot Career Graph"):
+        st.markdown("###  Points Over Time")
+        chart_data = joined.groupby('year')['points'].sum().reset_index()
+        chart = alt.Chart(chart_data).mark_line(point=True).encode(
+            x=alt.X('year:O', title='Year'),
+            y=alt.Y('points:Q', title='Total Points'),
+            tooltip=['year', 'points']
+        ).properties(width=700, height=400)
+
+        st.altair_chart(chart)
+else:
+    st.info("Select a driver from the sidebar to see their career analysis.")
