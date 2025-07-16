@@ -32,37 +32,35 @@ st.markdown("""
     }
     /* Sidebar container */
 section[data-testid="stSidebar"] {
-    background-color: #111111 !important;
-    border-right: 4px solid #e10600;
-    padding: 30px 20px;
-    box-shadow: inset -2px 0 6px rgba(255, 0, 0, 0.3);
+    background-color: #121212 !important;
+    padding: 2rem 1rem;
+    border-right: 2px solid #e10600;
 }
 
-/* Sidebar text and headings */
+/* Sidebar headings and labels */
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] .css-1cpxqw2 {
-    color: #ffffff !important;
+section[data-testid="stSidebar"] label {
     font-family: 'Orbitron', sans-serif !important;
-    letter-spacing: 0.05em;
+    color: #ffffff !important;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
 }
 
-/* Dropdown boxes */
-section[data-testid="stSidebar"] .stSelectbox,
-section[data-testid="stSidebar"] .stSelectbox div {
-    background-color: #1c1c1c !important;
-    border: 1px solid #e10600 !important;
-    border-radius: 5px;
-    color: white !important;
+/* Sidebar select box styling */
+section[data-testid="stSidebar"] .stSelectbox > div {
+    background-color: #1c1c1c;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 6px;
 }
 
-/* Dropdown text */
-section[data-testid="stSidebar"] .css-1wa3eu0-placeholder {
-    color: #aaa !important;
-    font-family: 'Orbitron', sans-serif;
+/* Sidebar selected text */
+section[data-testid="stSidebar"] .stSelectbox div span {
+    color: #e10600 !important;
+    font-weight: bold;
 }
 
     </style>
