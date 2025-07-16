@@ -35,7 +35,7 @@ st.markdown("""
 
 # === F1 Logo + Title
 st.markdown("""
-    <div style='text-align: center; padding: 10px 0;'>
+    <div style= padding: 10px 0;'>
         <img src='https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg' width='100'>
     </div>
 """, unsafe_allow_html=True)
