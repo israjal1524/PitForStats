@@ -69,6 +69,10 @@ data = load_all_data()
 # Ensure 'year' column exists in races
 if 'year' not in data['races'].columns:
     data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
+st.sidebar.markdown(
+    "<h2 style='color:#e10600; font-family:Orbitron, sans-serif; text-align:left;'>Analytics Controls</h2>",
+    unsafe_allow_html=True
+)
 
 # === Sidebar Filter: Year
 available_years = sorted(data['races']['year'].unique(), reverse=True)
