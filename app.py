@@ -30,6 +30,25 @@ st.markdown("""
     h1, h2, h3, h4 {
         color: #e10600;
     }
+    section[data-testid="stSidebar"] {
+    background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+    background-size: auto;
+    background-repeat: repeat;
+    border-right: 2px solid #e10600;
+    padding: 2rem 1rem;
+    color: #ffffff;
+}
+
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] label {
+    font-family: 'Orbitron', sans-serif !important;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+}
+
     </style>
 """, unsafe_allow_html=True)
 
