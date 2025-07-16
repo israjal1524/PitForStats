@@ -30,6 +30,41 @@ st.markdown("""
     h1, h2, h3, h4 {
         color: #e10600;
     }
+    /* Sidebar container */
+section[data-testid="stSidebar"] {
+    background-color: #111111 !important;
+    border-right: 4px solid #e10600;
+    padding: 30px 20px;
+    box-shadow: inset -2px 0 6px rgba(255, 0, 0, 0.3);
+}
+
+/* Sidebar text and headings */
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] .css-1cpxqw2 {
+    color: #ffffff !important;
+    font-family: 'Orbitron', sans-serif !important;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Dropdown boxes */
+section[data-testid="stSidebar"] .stSelectbox,
+section[data-testid="stSidebar"] .stSelectbox div {
+    background-color: #1c1c1c !important;
+    border: 1px solid #e10600 !important;
+    border-radius: 5px;
+    color: white !important;
+}
+
+/* Dropdown text */
+section[data-testid="stSidebar"] .css-1wa3eu0-placeholder {
+    color: #aaa !important;
+    font-family: 'Orbitron', sans-serif;
+}
+
     </style>
 """, unsafe_allow_html=True)
 
