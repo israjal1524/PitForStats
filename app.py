@@ -11,9 +11,8 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
-    html, body, [class*="css"] {
+    html, body, [class*="css"], h1, h2, h3, h4, h5, h6, .stText, .stMarkdown, .stDataFrame, .stMetricLabel, .stMetricValue {
         font-family: 'Orbitron', sans-serif !important;
-        background: none;
     }
 
     .stApp {
@@ -82,7 +81,7 @@ if selected_driver != "All Drivers":
     selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
     selected_driver_id = selected_driver_row['driverId']
 
-    st.markdown(f"##  Career Overview: {selected_driver}")
+    st.markdown(f"## Career Overview: {selected_driver}")
     career_results = data['results'][data['results']['driverId'] == selected_driver_id]
 
     col1, col2, col3 = st.columns(3)
@@ -95,7 +94,7 @@ if selected_driver != "All Drivers":
         joined['year'] = pd.to_datetime(joined['date']).dt.year
 
     columns_to_show = [col for col in ['year', 'raceName', 'grid', 'positionOrder', 'points'] if col in joined.columns]
-    st.markdown("###  Races Participated In")
+    st.markdown("### Races Participated In")
     st.dataframe(joined[columns_to_show].sort_values(by='year'))
 
     # === Plot Button
