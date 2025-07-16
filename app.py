@@ -30,45 +30,12 @@ st.markdown("""
     h1, h2, h3, h4 {
         color: #e10600;
     }
-    /* Sidebar container */
-section[data-testid="stSidebar"] {
-    background-color: #121212 !important;
-    padding: 2rem 1rem;
-    border-right: 2px solid #e10600;
-}
-
-/* Sidebar headings and labels */
-section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] label {
-    font-family: 'Orbitron', sans-serif !important;
-    color: #ffffff !important;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 500;
-}
-
-/* Sidebar select box styling */
-section[data-testid="stSidebar"] .stSelectbox > div {
-    background-color: #1c1c1c;
-    border: 1px solid #444;
-    color: white;
-    border-radius: 6px;
-}
-
-/* Sidebar selected text */
-section[data-testid="stSidebar"] .stSelectbox div span {
-    color: #e10600 !important;
-    font-weight: bold;
-}
-
     </style>
 """, unsafe_allow_html=True)
 
 # === F1 Logo + Title
 st.markdown("""
-    <div style= padding:60px 10px 0;'>
+    <div style='text-align: center; padding: 10px 0;'>
         <img src='https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg' width='100'>
     </div>
 """, unsafe_allow_html=True)
