@@ -32,6 +32,11 @@ st.markdown("""
         color: #e10600;
     }
     </style>
+
+    <!-- 🏑 Floating Checkered Flag -->
+    <div style='position: fixed; bottom: 20px; right: 20px; z-index: 1000;'>
+        <img src='https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif' width='80'>
+    </div>
 """, unsafe_allow_html=True)
 
 # === F1 Logo + Title
@@ -82,7 +87,7 @@ if selected_driver != "All Drivers":
     selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
     selected_driver_id = selected_driver_row['driverId']
 
-    st.markdown(f"##  Career Overview: {selected_driver}")
+    st.markdown(f"## 📊 Career Overview: {selected_driver}")
     career_results = data['results'][data['results']['driverId'] == selected_driver_id]
 
     col1, col2, col3 = st.columns(3)
@@ -91,21 +96,44 @@ if selected_driver != "All Drivers":
     col3.metric("Points", int(career_results['points'].sum()))
 
     joined = career_results.merge(data['races'], on='raceId', how='inner')
-    columns_to_show = [col for col in ['year', 'raceName', 'grid', 'positionOrder', 'points'] if col in joined.columns]
+    if 'year' not in joined.columns:
+        joined['year'] = pd.to_datetime(joined['date']).dt.year
 
-    st.markdown("###  Races Participated In")
+    columns_to_show = [col for col in ['year', 'raceName', 'grid', 'positionOrder', 'points'] if col in joined.columns]
+    st.markdown("### 📅 Races Participated In")
     st.dataframe(joined[columns_to_show].sort_values(by='year'))
 
     # === Plot Button
-    if st.button(" Plot Career Graph"):
-        st.markdown("###  Points Over Time")
+    if st.button("📈 Plot Career Graph"):
+        st.markdown("### 🧠 Points Over Time")
         chart_data = joined.groupby('year')['points'].sum().reset_index()
-        chart = alt.Chart(chart_data).mark_line(point=True).encode(
-            x=alt.X('year:O', title='Year'),
-            y=alt.Y('points:Q', title='Total Points'),
-            tooltip=['year', 'points']
-        ).properties(width=700, height=400)
 
-        st.altair_chart(chart)
+        base = alt.Chart(chart_data).encode(
+            x=alt.X('year:O', title='Season', axis=alt.Axis(labelFont='Orbitron', titleFont='Orbitron')),
+            y=alt.Y('points:Q', title='Total Points', axis=alt.Axis(labelFont='Orbitron', titleFont='Orbitron'))
+        )
+
+        line = base.mark_line(
+            color='#e10600',
+            strokeWidth=3
+        )
+
+        points = base.mark_circle(
+            size=80,
+            color='white',
+            opacity=1,
+            stroke='#e10600',
+            strokeWidth=2
+        )
+
+        final_chart = (line + points).properties(
+            width=700,
+            height=400,
+            background='#0f0f0f'
+        ).configure_view(
+            stroke=None
+        )
+
+        st.altair_chart(final_chart)
 else:
     st.info("Select a driver from the sidebar to see their career analysis.")
