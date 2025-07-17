@@ -63,23 +63,6 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
-st.markdown("""
-<div style='
-    border-radius: 15px;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-    overflow: hidden;
-    margin-bottom: 20px;
-'>
-<video width=1280px height=720px autoplay muted loop playsinline>
-  <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-</div>
-""", unsafe_allow_html=True)
-
-
-
-
 # === Load Data
 data = load_all_data()
 
@@ -99,6 +82,19 @@ races_this_year = data['races'][data['races']['year'] == selected_year]
 data['drivers']['driverName'] = data['drivers']['forename'] + ' ' + data['drivers']['surname']
 driver_list = data['drivers'].sort_values('surname')['driverName'].tolist()
 selected_driver = st.sidebar.selectbox("Select Driver", ["All Drivers"] + driver_list)
+st.sidebae.markdown("""
+<div style='
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    overflow: hidden;
+    margin-bottom: 20px;
+'>
+<video width=1536px height=196px autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+</div>
+""", unsafe_allow_html=True)
 
 # === Metrics
 col1, col2 = st.columns(2)
