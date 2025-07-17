@@ -63,6 +63,20 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
+st.markdown("""
+    <div style='display: flex; justify-content: center; padding: 20px 0;'>
+        <div style='width: 80%; max-width: 800px; border-radius: 15px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);'>
+            <iframe width="100%" height="400"
+                src="https://youtu.be/7U_fFy9vOyY?si=xusXzeYgzkB6SDZG"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+
+
 
 # === Load Data
 data = load_all_data()
