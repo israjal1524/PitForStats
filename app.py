@@ -82,14 +82,14 @@ races_this_year = data['races'][data['races']['year'] == selected_year]
 data['drivers']['driverName'] = data['drivers']['forename'] + ' ' + data['drivers']['surname']
 driver_list = data['drivers'].sort_values('surname')['driverName'].tolist()
 selected_driver = st.sidebar.selectbox("Select Driver", ["All Drivers"] + driver_list)
-st.sidebae.markdown("""
+st.sidebar.markdown("""
 <div style='
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
     overflow: hidden;
     margin-bottom: 20px;
 '>
-<video width=1536px height=196px autoplay muted loop playsinline>
+<video width=386px height=196px autoplay muted loop playsinline>
   <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
