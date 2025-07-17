@@ -35,7 +35,9 @@ st.markdown("""
     }
 
     section[data-testid="stSidebar"] * {
-        color: red;
+        color: white;
+        font-weight: bold;
+        font-family:'Orbitron', sans-serif:
     }
 
     .sidebar-title {
@@ -49,11 +51,6 @@ st.markdown("""
         color: #e10600;
     }
     </style>
-
-    <!-- 🏁 Floating Checkered Flag -->
-    <div style='position: fixed; bottom: 20px; right: 20px; z-index: 1000;'>
-        <img src='https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif' width='80'>
-    </div>
 """, unsafe_allow_html=True)
 
 # === F1 Logo + Title
