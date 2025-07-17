@@ -1,52 +1,42 @@
-import requests
 import pandas as pd
+import requests
 import os
 
-# Only CSVs we have
-CSV_AVAILABLE = {
-    "drivers": "drivers.csv",
-    "lap_times": "lap_times.csv",
-    "pit_data": "pit_data.csv"
-}
+DATA_DIR = "data"
 
-API_ENDPOINTS = {
-    "drivers": "drivers",
-    "lap_times": "lap_times",
-    "car_data": "car_data",
-    "position_data": "position",
-    "pit_data": "pit"
-}
-
-def load_from_api(endpoint: str) -> pd.DataFrame:
+def fetch_from_api(endpoint: str):
+    url = f"https://api.openf1.org/v1/{endpoint}"
     try:
-        response = requests.get(f"https://api.openf1.org/v1/{endpoint}", timeout=10)
+        response = requests.get(url, timeout=5)
         response.raise_for_status()
-        return pd.DataFrame(response.json())
-    except Exception:
+        df = pd.DataFrame(response.json())
+        if not df.empty:
+            df.to_csv(os.path.join(DATA_DIR, f"{endpoint}.csv"), index=False)
+        return df
+    except:
         return None
 
-def load_from_csv(filename: str) -> pd.DataFrame:
+def fetch_from_csv(endpoint: str):
     try:
-        path = os.path.join("data", filename)
-        return pd.read_csv(path)
-    except Exception:
+        return pd.read_csv(os.path.join(DATA_DIR, f"{endpoint}.csv"))
+    except:
         return pd.DataFrame()
 
+def load_data(endpoint: str):
+    df = fetch_from_api(endpoint)
+    if df is not None and not df.empty:
+        return df
+    return fetch_from_csv(endpoint)
+
 def load_all_data():
+    endpoints = [
+        "car_data", 
+        "position_data", 
+        "race_data", 
+        "lap_times", 
+        "pit_stops"
+    ]
     data = {}
-    mode = "API"
-
-    for key, endpoint in API_ENDPOINTS.items():
-        df = load_from_api(endpoint)
-
-        if (df is None or df.empty):
-            # Fallback only if CSV exists for this data type
-            if key in CSV_AVAILABLE:
-                mode = "CSV"
-                df = load_from_csv(CSV_AVAILABLE[key])
-            else:
-                df = pd.DataFrame()  # keep empty if no CSV fallback
-
-        data[key] = df
-
-    return data, mode
+    for ep in endpoints:
+        data[ep] = load_data(ep)
+    return data
