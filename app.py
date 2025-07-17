@@ -4,7 +4,7 @@ import altair as alt
 import os
 from src.data_loader import load_all_data
 
-st.set_page_config(page_title="Pit For Stats", layout="wide")
+st.set_page_config(page_title="Pit For Stats")
 
 # === Global styling
 st.markdown("""
