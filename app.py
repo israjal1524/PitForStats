@@ -64,17 +64,19 @@ st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_h
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
 st.markdown("""
-    <div style='display: flex; justify-content: center; padding: 20px 0;'>
-        <div style='width: 80%; max-width: 800px; border-radius: 15px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);'>
-            <iframe width="100%" height="400"
-                src="https://files.catbox.moe/tmvkbv.mp4"
-                frameborder="0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-            </iframe>
-        </div>
-    </div>
+<div style='
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    overflow: hidden;
+    margin-bottom: 20px;
+'>
+<video width=1280px height=720px autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+</div>
 """, unsafe_allow_html=True)
+
 
 
 
