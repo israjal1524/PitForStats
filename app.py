@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import os
 from src.data_loader import load_all_data
 
 st.set_page_config(page_title="Pit For Stats", layout="wide")
 
-# === Global Custom CSS Styling
+# === Global styling
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
@@ -26,22 +27,17 @@ st.markdown("""
         border-radius: 10px;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Orbitron', sans-serif !important;
-        color: #e10600;
+    section[data-testid="stSidebar"] > div:first-child {
+        background-image: url("https://i.imgur.com/OtZ9sYb.png");
+        background-size: cover;
+        padding: 20px;
+        border-radius: 0 10px 10px 0;
     }
-section[data-testid="stSidebar"] > div:first-child {
-    background-image: url("https://i.imgur.com/OtZ9sYb.png");
-    background-size: cover;
-    padding: 20px;
-    border-radius: 0 10px 10px 0;
-}
 
-section[data-testid="stSidebar"] * {
-    color: white;
-}
+    section[data-testid="stSidebar"] * {
+        color: white;
+    }
 
-    /* Sidebar heading */
     .sidebar-title {
         font-family: 'Orbitron', sans-serif;
         color: #e10600;
@@ -49,23 +45,20 @@ section[data-testid="stSidebar"] * {
         padding-bottom: 10px;
     }
 
-    /* Floating flag */
-    .flag {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1000;
+    h1, h2, h3, h4 {
+        color: #e10600;
     }
     </style>
 
-    <div class='flag'>
+    <!-- 🏁 Floating Checkered Flag -->
+    <div style='position: fixed; bottom: 20px; right: 20px; z-index: 1000;'>
         <img src='https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif' width='80'>
     </div>
 """, unsafe_allow_html=True)
 
-# === F1 Logo and Title
+# === F1 Logo + Title
 st.markdown("""
-    <div style='text-align: center; padding-top: 30px;'>
+    <div style='text-align: center; padding: 40px 0 10px 0;'>
         <img src='https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg' width='100'>
     </div>
 """, unsafe_allow_html=True)
@@ -77,16 +70,19 @@ st.markdown("---")
 # === Load Data
 data = load_all_data()
 
-# === Preprocess
+# Ensure 'year' column exists in races
 if 'year' not in data['races'].columns:
     data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
 
 # === Sidebar Controls
 st.sidebar.markdown("<div class='sidebar-title'>Analytics Controls</div>", unsafe_allow_html=True)
 
+# Year Filter
 available_years = sorted(data['races']['year'].unique(), reverse=True)
-selected_year = st.sidebar.selectbox("Select Year", available_years)
+selected_year = st.sidebar.selectbox("Select Year", available_years, index=0)
+races_this_year = data['races'][data['races']['year'] == selected_year]
 
+# Driver Filter
 data['drivers']['driverName'] = data['drivers']['forename'] + ' ' + data['drivers']['surname']
 driver_list = data['drivers'].sort_values('surname')['driverName'].tolist()
 selected_driver = st.sidebar.selectbox("Select Driver", ["All Drivers"] + driver_list)
@@ -104,10 +100,9 @@ st.markdown("---")
 
 # === Race Calendar
 st.markdown(f"### Race Calendar - {selected_year} Season")
-races_this_year = data['races'][data['races']['year'] == selected_year]
 st.dataframe(races_this_year.reset_index(drop=True))
 
-# === Driver Career Section
+# === Driver Analysis
 if selected_driver != "All Drivers":
     selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
     selected_driver_id = selected_driver_row['driverId']
@@ -124,17 +119,18 @@ if selected_driver != "All Drivers":
     if 'year' not in joined.columns:
         joined['year'] = pd.to_datetime(joined['date']).dt.year
 
-    st.markdown("### 📅 Races Participated In")
     columns_to_show = [col for col in ['year', 'raceName', 'grid', 'positionOrder', 'points'] if col in joined.columns]
+    st.markdown("### 📅 Races Participated In")
     st.dataframe(joined[columns_to_show].sort_values(by='year'))
 
+    # === Plot Button
     if st.button("📈 Plot Career Graph"):
         st.markdown("### 🧠 Points Over Time")
         chart_data = joined.groupby('year')['points'].sum().reset_index()
 
         base = alt.Chart(chart_data).encode(
-            x=alt.X('year:O', title='Season'),
-            y=alt.Y('points:Q', title='Total Points')
+            x=alt.X('year:O', title='Season', axis=alt.Axis(labelFont='Orbitron', titleFont='Orbitron')),
+            y=alt.Y('points:Q', title='Total Points', axis=alt.Axis(labelFont='Orbitron', titleFont='Orbitron'))
         )
 
         line = base.mark_line(
