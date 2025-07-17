@@ -89,7 +89,7 @@ st.sidebar.markdown("""
     overflow: hidden;
     margin-bottom: 20px;
 '>
-<video width=386px height=196px autoplay muted loop playsinline>
+<video width=350px height=200px autoplay muted loop playsinline>
   <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
