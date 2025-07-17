@@ -28,7 +28,7 @@ st.markdown("""
     }
 
     section[data-testid="stSidebar"] > div:first-child {
-        background-image: url("https://i.imgur.com/OtZ9sYb.png");
+        background-image: url(""https://imgs.search.brave.com/OujYUCEYyu9odvRJM4fbqfcUNAyX06kqAyaJCvj4HMQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/c3llbnNxby5jb20v/c2l0ZXMvZy9maWxl/cy9hbHdseGUxNjEv/ZmlsZXMvc3R5bGVz/L2xhbmRzY2FwZV9z/bS9wdWJsaWMvZXh0/ZXJuYWxzL2QvMS9k/MWZlMWQ2MDYyNzM4/YjE0NDA4NjA0ODM5/NDk5ZjMwZi5qcGc_/aXRvaz00WjljZnJL/MQ);
         background-size: cover;
         padding: 20px;
         border-radius: 0 10px 10px 0;
