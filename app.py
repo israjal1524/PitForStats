@@ -42,7 +42,7 @@ st.markdown("""
 
     .sidebar-title {
         font-family: 'Orbitron', sans-serif;
-        color: ff0000;
+        color: red;
         font-size: 20px;
         padding-bottom: 10px;
     }
