@@ -35,12 +35,12 @@ st.markdown("""
     }
 
     section[data-testid="stSidebar"] * {
-        color: white;
+        color: red;
     }
 
     .sidebar-title {
         font-family: 'Orbitron', sans-serif;
-        color: #e10600;
+        color: ff0000;
         font-size: 20px;
         padding-bottom: 10px;
     }
