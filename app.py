@@ -30,13 +30,16 @@ st.markdown("""
         font-family: 'Orbitron', sans-serif !important;
         color: #e10600;
     }
+section[data-testid="stSidebar"] > div:first-child {
+    background-image: url("https://i.imgur.com/OtZ9sYb.png");
+    background-size: cover;
+    padding: 20px;
+    border-radius: 0 10px 10px 0;
+}
 
-    /* Sidebar carbon fibre */
-    section[data-testid="stSidebar"] {
-        background-image: url("https://i.imgur.com/OtZ9sYb.png");
-        background-size: cover;
-        color: white;
-    }
+section[data-testid="stSidebar"] * {
+    color: white;
+}
 
     /* Sidebar heading */
     .sidebar-title {
