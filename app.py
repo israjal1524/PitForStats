@@ -67,7 +67,7 @@ st.markdown("""
     <div style='display: flex; justify-content: center; padding: 20px 0;'>
         <div style='width: 80%; max-width: 800px; border-radius: 15px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);'>
             <iframe width="100%" height="400"
-                src="https://www.kapwing.com/videos/68796262419cce04e08b00f6"
+                src="https://files.catbox.moe/tmvkbv.mp4"
                 frameborder="0"
                 allow="autoplay; encrypted-media"
                 allowfullscreen>
