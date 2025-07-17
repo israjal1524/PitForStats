@@ -1,12 +1,18 @@
 import pandas as pd
+import os
 
-def load_csv(filename):
-    return pd.read_csv(f"data/{filename}")
+DATA_PATH = "data"
+FILES_TO_LOAD = ["races", "results", "drivers", "constructors"]
+
+def load_csv(name):
+    path = os.path.join(DATA_PATH, f"{name}.csv")
+    return pd.read_csv(path)
 
 def load_all_data():
-    return {
-        "races": load_csv("races.csv"),
-        "results": load_csv("results.csv"),
-        "drivers": load_csv("drivers.csv"),
-        "constructors": load_csv("constructors.csv"),
-    }
+    data = {}
+    for name in FILES_TO_LOAD:
+        try:
+            data[name] = load_csv(name)
+        except FileNotFoundError:
+            print(f"Warning: {name}.csv not found, skipping.")
+    return data
