@@ -1056,7 +1056,7 @@ raceId,year,round,circuitId,name,date,time,url,fp1_date,fp1_time,fp2_date,fp2_ti
 1070,2021,18,32,"Mexico City Grand Prix","2021-11-07","19:00:00","http://en.wikipedia.org/wiki/2021_Mexican_Grand_Prix","2021-11-05",\N,"2021-11-05",\N,"2021-11-06",\N,"2021-11-06",\N,\N,\N
 1071,2021,19,18,"São Paulo Grand Prix","2021-11-14","17:00:00","http://en.wikipedia.org/wiki/2021_S%C3%A3o_Paulo_Grand_Prix","2021-11-12",\N,"2021-11-13",\N,\N,\N,"2021-11-12",\N,"2021-11-13",\N
 1072,2021,21,77,"Saudi Arabian Grand Prix","2021-12-05","17:30:00","http://en.wikipedia.org/wiki/2021_Saudi_Arabian_Grand_Prix","2021-12-03",\N,"2021-12-03",\N,"2021-12-04",\N,"2021-12-04",\N,\N,\N
-1073,2021,22,24,"Abu Dhabi Grand Prix","2021-12-12","13:00:00","http://en.wikipedia.org/wiki/2021_Abu_Dhabi_Grand_Prix","2021-12-10",\N,"2021-12-10",\N,"2021-12-11",\N,"2021-12-11",\N,\N,\N
+1073,2021,22,24,"Abu Dhabi Grand Prix","2021-12-12","13:00:00","https://youtu.be/7QJ-N-AQJYc?si=PJouOn1QFP3MyxOQ","2021-12-10",\N,"2021-12-10",\N,"2021-12-11",\N,"2021-12-11",\N,\N,\N
 1075,2022,2,77,"Saudi Arabian Grand Prix","2022-03-27","17:00:00","http://en.wikipedia.org/wiki/2022_Saudi_Arabian_Grand_Prix","2022-03-25","14:00:00","2022-03-25","17:00:00","2022-03-26","14:00:00","2022-03-26","17:00:00",\N,\N
 1076,2022,3,1,"Australian Grand Prix","2022-04-10","05:00:00","http://en.wikipedia.org/wiki/2022_Australian_Grand_Prix","2022-04-08","03:00:00","2022-04-08","06:00:00","2022-04-09","03:00:00","2022-04-09","06:00:00",\N,\N
 1077,2022,4,21,"Emilia Romagna Grand Prix","2022-04-24","13:00:00","http://en.wikipedia.org/wiki/2022_Emilia_Romagna_Grand_Prix","2022-04-22","11:30:00","2022-04-23","10:30:00",\N,\N,"2022-04-22","15:00:00","2022-04-23","14:30:00"
