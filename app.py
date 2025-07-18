@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-import requests
+import os
 from src.data_loader import load_all_data
 
 st.set_page_config(page_title="Pit For Stats")
@@ -28,19 +28,21 @@ st.markdown("""
     }
 
     section[data-testid="stSidebar"] > div:first-child {
-        position: relative;
-        z-index: 1;
+        background-image: url("https://i.pinimg.com/736x/63/1d/7c/631d7cb223d14d59f007f9283710ccb9.jpg");
+        background-size: cover;
         padding: 20px;
         border-radius: 0 10px 10px 0;
     }
 
     section[data-testid="stSidebar"] * {
         color: white;
+        font-weight: bold;
+        font-family:'Orbitron', sans-serif:
     }
 
     .sidebar-title {
         font-family: 'Orbitron', sans-serif;
-        color: #e10600;
+        color: red;
         font-size: 20px;
         padding-bottom: 10px;
     }
@@ -49,36 +51,6 @@ st.markdown("""
         color: #e10600;
     }
     </style>
-
-    <!-- Sidebar Video Background -->
-    <style>
-    .sidebar-video-wrapper {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      z-index: 0;
-      overflow: hidden;
-      border-radius: 0 10px 10px 0;
-    }
-
-    .sidebar-video-wrapper video {
-      min-height: 100%;
-      min-width: 100%;
-      object-fit: cover;
-      opacity: 0.2;
-      pointer-events: none;
-    }
-    </style>
-
-    <section data-testid="stSidebar">
-        <div class="sidebar-video-wrapper">
-            <video autoplay muted loop playsinline>
-                <source src="https://files.catbox.moe/yourvideo.mp4" type="video/mp4">
-            </video>
-        </div>
-    </section>
 """, unsafe_allow_html=True)
 
 # === F1 Logo + Title
@@ -91,7 +63,6 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
-
 # === Load Data
 data = load_all_data()
 
@@ -111,6 +82,19 @@ races_this_year = data['races'][data['races']['year'] == selected_year]
 data['drivers']['driverName'] = data['drivers']['forename'] + ' ' + data['drivers']['surname']
 driver_list = data['drivers'].sort_values('surname')['driverName'].tolist()
 selected_driver = st.sidebar.selectbox("Select Driver", ["All Drivers"] + driver_list)
+st.sidebar.markdown("""
+<div style='
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    overflow: hidden;
+    margin-bottom: 20px;
+'>
+<video width=350px height=200px autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+</div>
+""", unsafe_allow_html=True)
 
 # === Metrics
 col1, col2 = st.columns(2)
@@ -132,7 +116,7 @@ if selected_driver != "All Drivers":
     selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
     selected_driver_id = selected_driver_row['driverId']
 
-    st.markdown(f"##  Career Overview: {selected_driver}")
+    st.markdown(f"## Career Overview: {selected_driver}")
     career_results = data['results'][data['results']['driverId'] == selected_driver_id]
 
     col1, col2, col3 = st.columns(3)
@@ -145,12 +129,12 @@ if selected_driver != "All Drivers":
         joined['year'] = pd.to_datetime(joined['date']).dt.year
 
     columns_to_show = [col for col in ['year', 'raceName', 'grid', 'positionOrder', 'points'] if col in joined.columns]
-    st.markdown("###  Races Participated In")
+    st.markdown("### Races Participated In")
     st.dataframe(joined[columns_to_show].sort_values(by='year'))
 
     # === Plot Button
-    if st.button(" Plot Career Graph"):
-        st.markdown("###  Points Over Time")
+    if st.button("Plot Career Graph"):
+        st.markdown("### Points Over Time")
         chart_data = joined.groupby('year')['points'].sum().reset_index()
 
         base = alt.Chart(chart_data).encode(
