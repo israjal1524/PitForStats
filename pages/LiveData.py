@@ -48,6 +48,11 @@ st.markdown("""
         color: #e10600;
     }
     </style>
+
+    <!-- 🏁 Floating Checkered Flag -->
+    <div style='position: fixed; bottom: 20px; right: 20px; z-index: 1000;'>
+        <img src='https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif' width='80'>
+    </div>
 """, unsafe_allow_html=True)
 
 # === F1 Logo + Title
@@ -61,33 +66,7 @@ st.markdown("<h1 style='text-align: center;'>Live F1 Data</h1>", unsafe_allow_ht
 st.markdown("<h4 style='text-align: center; color: grey;'>Powered by OpenF1 API</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
-# === Fetch Last Race Info
-def fetch_last_race():
-    url = "https://ergast.com/api/f1/current/last.json"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        race = data['MRData']['RaceTable']['Races'][0]
-        return {
-            'raceName': race['raceName'],
-            'circuit': race['Circuit']['circuitName'],
-            'location': race['Circuit']['Location']['locality'],
-            'country': race['Circuit']['Location']['country'],
-            'date': race['date'],
-            'round': race['round']
-        }
-    else:
-        return None
-
-def is_race_live(race_date_str):
-    try:
-        race_time = datetime.strptime(race_date_str, "%Y-%m-%d").replace(tzinfo=timezone.utc)
-        now = datetime.now(timezone.utc)
-        return race_time <= now <= race_time.replace(hour=race_time.hour + 3)
-    except:
-        return False
-
-# === Fetch Last Race Results
+# --- Fetch last race results ---
 @st.cache_data(ttl=300)
 def fetch_last_results():
     url = "https://ergast.com/api/f1/current/last/results.json"
@@ -97,58 +76,35 @@ def fetch_last_results():
         data = resp.json()
         results = data['MRData']['RaceTable']['Races'][0]['Results']
         df = pd.DataFrame(results)
+        df = df[['position', 'Driver', 'Constructor', 'grid', 'laps', 'status', 'Time', 'FastestLap']]
+        # flatten nested columns
         df['Driver'] = df['Driver'].apply(lambda d: d['givenName'] + ' ' + d['familyName'])
         df['Constructor'] = df['Constructor'].apply(lambda d: d['name'])
         df['Time'] = df['Time'].apply(lambda t: t['time'] if t else None)
-        df['FastestLap'] = df['FastestLap'].apply(lambda f: f['Time']['time'] if f and 'Time' in f else None)
-        df = df[['position', 'Driver', 'Constructor', 'grid', 'laps', 'status', 'Time', 'FastestLap']]
+        df['FastestLap'] = df['FastestLap'].apply(lambda f: f['Time']['time'] if f else None)
         return df
-    except:
-        return pd.DataFrame()
+    except Exception as e:
+        st.warning("Could not fetch live data — showing fallback example.")
+        return pd.DataFrame({
+            'position': ['1','2','3'],
+            'Driver': ['Lando Norris','Oscar Piastri','Nico Hülkenberg'],
+            'Constructor': ['McLaren','McLaren','Haas'],
+            'grid': [3,2,19],
+            'laps': [52,52,52],
+            'status': ['Finished','Finished','Finished'],
+            'Time': ['1:30:00', '1:30:10', '1:30:20'],
+            'FastestLap': ['1:30.5','1:31.2','1:32.0']
+        })
 
-# === Fetch Lap Times (Optional Extension)
-@st.cache_data(ttl=300)
-def fetch_lap_times():
-    url = "https://ergast.com/api/f1/current/last/laps.json?limit=200"
-    try:
-        resp = requests.get(url, timeout=5)
-        resp.raise_for_status()
-        data = resp.json()
-        laps = data['MRData']['RaceTable']['Races'][0]['Laps']
-        lap_data = []
-        for lap in laps:
-            for timing in lap['Timings']:
-                lap_data.append({
-                    'lap': int(lap['number']),
-                    'driverId': timing['driverId'],
-                    'position': int(timing['position']),
-                    'time': timing['time']
-                })
-        return pd.DataFrame(lap_data)
-    except:
-        return pd.DataFrame()
+# --- Main display ---
+st.header("🏆 Last Grand Prix Results")
+df = fetch_last_results()
+st.table(df)
 
-last_race = fetch_last_race()
-
-if last_race:
-    if is_race_live(last_race['date']):
-        st.success("Race is LIVE! Stay tuned for live updates.")
-        st.markdown(f"###  Live Grand Prix: {last_race['raceName']}")
-    else:
-        st.info("No race is currently live.")
-        st.markdown(f"###  Last Grand Prix: {last_race['raceName']}")
-
-    st.markdown(f"**Location:** {last_race['location']}, {last_race['country']}")
-    st.markdown(f"**Circuit:** {last_race['circuit']}")
-    st.markdown(f"**Date:** {last_race['date']}")
-    st.markdown(f"**Round:** {last_race['round']}")
-else:
-    st.error("Failed to load last race information.")
-
-# === Optional: Lap Times (under development)
-lap_df = fetch_lap_times()
-if not lap_df.empty:
-    st.subheader("⏱ Lap Times Overview")
-    st.dataframe(lap_df.head(50))
-else:
-    st.warning("Lap time data not available for the last race.")
+# --- Podium Image ---
+st.subheader("Podium Finishers")
+st.image(
+    "https://images.unsplash.com/photo-1595855014810-77fb13c92901",
+    caption="Race winners celebrating on the podium",
+    use_column_width=True
+)
