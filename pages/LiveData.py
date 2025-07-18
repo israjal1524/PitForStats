@@ -28,6 +28,8 @@ st.markdown("""
 
     section[data-testid="stSidebar"] > div:first-child {
         position: relative;
+        background-image: url("https://i.pinimg.com/736x/63/1d/7c/631d7cb223d14d59f007f9283710ccb9.jpg");
+        background-size: cover;
         z-index: 1;
         padding: 20px;
         border-radius: 0 10px 10px 0;
