@@ -145,18 +145,6 @@ if last_race:
 else:
     st.error("Failed to load last race information.")
 
-# === Display Last Results Table
-st.header(" Last Grand Prix Results")
-st.dataframe(fetch_last_results(), use_container_width=True)
-
-# === Podium Image
-st.subheader("Podium Finishers")
-st.image(
-    "https://images.unsplash.com/photo-1595855014810-77fb13c92901",
-    caption="Race winners celebrating on the podium",
-    use_column_width=True
-)
-
 # === Optional: Lap Times (under development)
 lap_df = fetch_lap_times()
 if not lap_df.empty:
