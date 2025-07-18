@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 import os
-from src.data_loader import load_all_data, get_flag
+from src.data_loader import load_all_data
 
 st.set_page_config(page_title="Pit For Stats")
 
@@ -13,7 +13,6 @@ st.markdown("""
 
     html, body, [class*="css"] {
         font-family: 'Orbitron', sans-serif !important;
-        background: none;
     }
 
     .stApp {
@@ -28,21 +27,35 @@ st.markdown("""
         border-radius: 10px;
     }
 
+    section[data-testid="stSidebar"] > div:first-child {
+        background-image: url("https://i.pinimg.com/736x/63/1d/7c/631d7cb223d14d59f007f9283710ccb9.jpg");
+        background-size: cover;
+        padding: 20px;
+        border-radius: 0 10px 10px 0;
+    }
+
+    section[data-testid="stSidebar"] * {
+        color: white;
+        font-weight: bold;
+        font-family:'Orbitron', sans-serif:
+    }
+
+    .sidebar-title {
+        font-family: 'Orbitron', sans-serif;
+        color: red;
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+
     h1, h2, h3, h4 {
         color: #e10600;
     }
-
-    .sidebar .sidebar-content {
-        background-color: #0f0f0f;
-        color: white;
-    }
-
     </style>
 """, unsafe_allow_html=True)
 
 # === F1 Logo + Title
 st.markdown("""
-    <div style='text-align: center; padding: 50px 0 10px 0;'>
+    <div style='text-align: center; padding: 40px 0 10px 0;'>
         <img src='https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg' width='100'>
     </div>
 """, unsafe_allow_html=True)
@@ -50,7 +63,6 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center;'>Pit For Stats</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Formula 1 Analytics Dashboard</h4>", unsafe_allow_html=True)
 st.markdown("---")
-
 # === Load Data
 data = load_all_data()
 
@@ -58,18 +70,31 @@ data = load_all_data()
 if 'year' not in data['races'].columns:
     data['races']['year'] = pd.to_datetime(data['races']['date']).dt.year
 
-# === Sidebar Filter: Year
-st.sidebar.markdown("""<h3 style='color: #e10600;'>Analytics Controls</h3>""", unsafe_allow_html=True)
+# === Sidebar Controls
+st.sidebar.markdown("<div class='sidebar-title'>Analytics Controls</div>", unsafe_allow_html=True)
+
+# Year Filter
 available_years = sorted(data['races']['year'].unique(), reverse=True)
 selected_year = st.sidebar.selectbox("Select Year", available_years, index=0)
 races_this_year = data['races'][data['races']['year'] == selected_year]
 
-# === Sidebar Filter: Driver
-data['drivers']['driverFlagged'] = data['drivers'].apply(
-    lambda row: f"{get_flag(row['nationality'])} {row['forename']} {row['surname']}", axis=1
-)
-driver_list = data['drivers'].sort_values('surname')['driverFlagged'].tolist()
+# Driver Filter
+data['drivers']['driverName'] = data['drivers']['forename'] + ' ' + data['drivers']['surname']
+driver_list = data['drivers'].sort_values('surname')['driverName'].tolist()
 selected_driver = st.sidebar.selectbox("Select Driver", ["All Drivers"] + driver_list)
+st.sidebar.markdown("""
+<div style='
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    overflow: hidden;
+    margin-bottom: 20px;
+'>
+<video width=350px height=200px autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+</div>
+""", unsafe_allow_html=True)
 
 # === Metrics
 col1, col2 = st.columns(2)
@@ -88,11 +113,10 @@ st.dataframe(races_this_year.reset_index(drop=True))
 
 # === Driver Analysis
 if selected_driver != "All Drivers":
-    driver_name_only = selected_driver.split(' ', 1)[1]
-    selected_driver_row = data['drivers'][data['drivers']['driverFlagged'] == selected_driver].iloc[0]
+    selected_driver_row = data['drivers'][data['drivers']['driverName'] == selected_driver].iloc[0]
     selected_driver_id = selected_driver_row['driverId']
 
-    st.markdown(f"## Career Overview: {driver_name_only}")
+    st.markdown(f"## Career Overview: {selected_driver}")
     career_results = data['results'][data['results']['driverId'] == selected_driver_id]
 
     col1, col2, col3 = st.columns(3)
@@ -109,7 +133,7 @@ if selected_driver != "All Drivers":
     st.dataframe(joined[columns_to_show].sort_values(by='year'))
 
     # === Plot Button
-    if st.button(" Plot Career Graph"):
+    if st.button("Plot Career Graph"):
         st.markdown("### Points Over Time")
         chart_data = joined.groupby('year')['points'].sum().reset_index()
 
