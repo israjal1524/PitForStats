@@ -60,6 +60,21 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center;'>Live F1 Data</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: center; color: grey;'>Powered by OpenF1 API</h4>", unsafe_allow_html=True)
 st.markdown("---")
+# === Sidebar Controls
+st.sidebar.markdown("<div class='sidebar-title'>Analytics Controls</div>", unsafe_allow_html=True)
+st.sidebar.markdown("""
+<div style='
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    overflow: hidden;
+    margin-bottom: 20px;
+'>
+<video width=350px height=200px autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/tmvkbv.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+</div>
+""", unsafe_allow_html=True)
 
 # --- Fetch last race results ---
 @st.cache_data(ttl=300)
