@@ -64,20 +64,30 @@ st.markdown("---")
 # === Fetch Last Race Info
 def fetch_last_race():
     url = "https://ergast.com/api/f1/current/last.json"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        race = data['MRData']['RaceTable']['Races'][0]
+    try:
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            race = data['MRData']['RaceTable']['Races'][0]
+            return {
+                'raceName': race['raceName'],
+                'circuit': race['Circuit']['circuitName'],
+                'location': race['Circuit']['Location']['locality'],
+                'country': race['Circuit']['Location']['country'],
+                'date': race['date'],
+                'round': race['round']
+            }
+    except Exception as e:
+        st.warning("Could not connect to live API. Showing fallback data.")
         return {
-            'raceName': race['raceName'],
-            'circuit': race['Circuit']['circuitName'],
-            'location': race['Circuit']['Location']['locality'],
-            'country': race['Circuit']['Location']['country'],
-            'date': race['date'],
-            'round': race['round']
+            'raceName': "British Grand Prix",
+            'circuit': "Silverstone Circuit",
+            'location': "Silverstone",
+            'country': "UK",
+            'date': "2025-07-07",
+            'round': "12"
         }
-    else:
-        return None
+
 
 def is_race_live(race_date_str):
     try:
