@@ -14,5 +14,5 @@ def load_all_data():
         try:
             data[name] = load_csv(name)
         except FileNotFoundError:
-            print(f"Warning: {name}.csv not found, skipping.")
+            print(f"⚠️ Warning: {name}.csv not found, skipping.")
     return data
