@@ -48,11 +48,6 @@ st.markdown("""
         color: #e10600;
     }
     </style>
-
-    <!-- 🏁 Floating Checkered Flag -->
-    <div style='position: fixed; bottom: 20px; right: 20px; z-index: 1000;'>
-        <img src='https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif' width='80'>
-    </div>
 """, unsafe_allow_html=True)
 
 # === F1 Logo + Title
@@ -100,11 +95,3 @@ def fetch_last_results():
 st.header("🏆 Last Grand Prix Results")
 df = fetch_last_results()
 st.table(df)
-
-# --- Podium Image ---
-st.subheader("Podium Finishers")
-st.image(
-    "https://images.unsplash.com/photo-1595855014810-77fb13c92901",
-    caption="Race winners celebrating on the podium",
-    use_column_width=True
-)
