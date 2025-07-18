@@ -92,6 +92,6 @@ def fetch_last_results():
         })
 
 # --- Main display ---
-st.header("🏆 Last Grand Prix Results")
+st.header("Last Grand Prix Results")
 df = fetch_last_results()
 st.table(df)
